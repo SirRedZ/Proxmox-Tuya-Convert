@@ -24,7 +24,7 @@ function cleanup() {
 trap cleanup EXIT
 TMP=`mktemp -d`
 pushd $TMP >/dev/null
-wget -q https://raw.githubusercontent.com/whiskerz007/proxmox_tuya-convert_container/master/{install_tuya-convert,login}.sh
+wget -q https://raw.githubusercontent.com/sirredz/proxmox-tuya-convert/development/{install_tuya-convert,login}.sh
 
 # Check for dependencies
 which iw >/dev/null || (
@@ -63,7 +63,7 @@ elif [ ${#WLANS_READY[@]} -eq 0 ]; then
   die "Unable to identify usable WiFi adapters. If the adapter is currently attached, check your drivers."
 fi
 while true; do
-  echo -e "\n\nHere are all of your available WiFi interfaces...\n"
+  echo -e "\n\nHere is a list of compatible and available WiFi interfaces...\n"
   for i in "${!WLANS_READY[@]}"; do
     echo "$i) ${WLANS_READY[$i]}"
   done
@@ -93,7 +93,7 @@ echo "Next ID is $CTID"
 # Download latest Debian LXC template
 pveam update
 mapfile -t DEBIANS < <(pveam available -section system | sed -n "s/.*\(debian.*\)/\1/p")
-DEBIAN="${DEBIANS[-1]}"
+DEBIAN="${DEBIANS[-3]}"
 pveam download local $DEBIAN ||
   die "A problem occured while downloading the LXC template."
 TEMPLATE="local:vztmpl/${DEBIAN}"
