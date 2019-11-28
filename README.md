@@ -2,7 +2,7 @@
 
 ### Due to major updates made to the Tuya-Convert repository, the Proxmox deployment requires some rework. Please be patient as I take a crack at accomplishing this task. 
 
-## CURRENT STATUS: Intermittant Working - Do not proceed to pull this script (unless you want to work on it!)
+## CURRENT STATUS: Intermittent Working - Do not proceed to pull this script (unless you want to work on it!)
 Some people report Vtrust-flash exists, but can not connect to it with Mobile phone, etc...
 
 
