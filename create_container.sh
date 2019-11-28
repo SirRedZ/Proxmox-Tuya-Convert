@@ -24,7 +24,7 @@ function cleanup() {
 trap cleanup EXIT
 TMP=`mktemp -d`
 pushd $TMP >/dev/null
-wget -q https://raw.githubusercontent.com/Tollbringer/Proxmox-Tuya-Convertcreate_container.sh/master/{install_tuya-convert,login}.sh
+wget -q https://raw.githubusercontent.com/Tollbringer/Proxmox-Tuya-Convert/master/{install_tuya-convert,login}.sh
 
 # Check for dependencies
 which iw >/dev/null || (
