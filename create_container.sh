@@ -61,19 +61,22 @@ if [ ${#WLANS_READY[@]} -eq 0 ] && $FAILED_SUPPORT; then
   die "One or more of the detected WiFi adapters do not support 'AP mode'. Try another adapter."
 elif [ ${#WLANS_READY[@]} -eq 0 ]; then
   die "Unable to identify usable WiFi adapters. If the adapter is currently attached, check your drivers."
-fi
-while true; do
-  echo -e "\n\nHere are all of your available WiFi interfaces...\n"
-  for i in "${!WLANS_READY[@]}"; do
-    echo "$i) ${WLANS_READY[$i]}"
+elif [ ${#WLANS_READY[@]} -eq 1 ]; then
+  WLAN=${WLANS_READY[0]}
+else
+  while true; do
+    echo -e "\n\nHere are all of your available WiFi interfaces...\n"
+    for i in "${!WLANS_READY[@]}"; do
+      echo "$i) ${WLANS_READY[$i]}"
+    done
+    echo
+    read -n 1 -p "Which interface would you like to use? " WLAN
+    if [[ "${WLAN}" =~ ^[0-9]+$ ]] && [ ! -z ${WLANS_READY[$WLAN]} ]; then
+      WLAN=${WLANS_READY[$WLAN]}
+      break
+    fi
   done
-  echo
-  read -n 1 -p "Which interface would you like to use? " WLAN
-  if [[ "${WLAN}" =~ ^[0-9]+$ ]] && [ ! -z ${WLANS_READY[$WLAN]} ]; then
-    WLAN=${WLANS_READY[$WLAN]}
-    break
-  fi
-done
+fi
 echo -e "\nUsing $WLAN..."
 
 # Get the next guest VM/LXC ID
@@ -92,11 +95,13 @@ echo "Next ID is $CTID"
 
 # Download latest Debian LXC template
 pveam update
-mapfile -t DEBIANS < <(pveam available -section system | sed -n "s/.*\(debian.*\)/\1/p")
-DEBIAN="${DEBIANS[-1]}"
-pveam download local $DEBIAN ||
+OSTYPE=debian
+OSVERSION=${OSTYPE}-10
+mapfile -t TEMPLATES < <(pveam available -section system | sed -n "s/.*\($OSVERSION.*\)/\1/p" | sort -t - -k 2 -V)
+TEMPLATE="${TEMPLATES[-1]}"
+pveam download local $TEMPLATE ||
   die "A problem occured while downloading the LXC template."
-TEMPLATE="local:vztmpl/${DEBIAN}"
+TEMPLATE_STRING="local:vztmpl/${TEMPLATE}"
 
 # Create LXC and add WLAN interface
 DISK_PREFIX="vm"
@@ -115,8 +120,8 @@ pvesm alloc $LXC_STORAGE $CTID $DISK 2G --format $DISK_FORMAT
 if [ "$STORAGE_TYPE" != "zfspool" ]; then
     mke2fs $DISK_PATH
 fi
-pct create $CTID $TEMPLATE -arch amd64 -cores 1 -hostname tuya-convert \
-    -net0 name=eth0,bridge=vmbr0,ip=dhcp,type=veth -ostype debian \
+pct create $CTID $TEMPLATE_STRING -arch amd64 -cores 1 -hostname tuya-convert \
+    -net0 name=eth0,bridge=vmbr0,ip=dhcp,type=veth -ostype $OSTYPE \
     -rootfs $ROOTFS -storage $LXC_STORAGE
 cat <<EOF >> /etc/pve/lxc/${CTID}.conf
 lxc.net.1.type: phys
