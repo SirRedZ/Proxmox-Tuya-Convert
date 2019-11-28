@@ -14,14 +14,6 @@ if [ "${REF[0]}" != "${REF[1]}" ]; then
 fi
 ./start_flash.sh
 echo "tuya-convert exited with code:$?"
-#RESULT=$?
-#if [ $RESULT -ne 0 ]; then
-#  echo -e "\nWARNING: An error occured when trying to flash device. Dropping to shell...\n"
-#  /bin/bash
-#else
-#  if [ $RESPONSE -eq 1 ]; then
-#    SLEEP=2
-#  else
 echo -e "\n\nWaiting for flash to complete.\nSleeping for 75 seconds...\n"
 SLEEP 75
 
