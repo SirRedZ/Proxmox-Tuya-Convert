@@ -25,11 +25,13 @@ locale-gen
 # Install tuya-convert
 apt update
 apt upgrade -y
+echo "samba-common samba-common/dhcp boolean false" | debconf-set-selections
 apt install -y git curl network-manager net-tools samba
 git clone https://github.com/ct-Open-Source/tuya-convert
 find tuya-convert -name \*.sh -exec sed -i -e "s/sudo \(-\S\+ \)*//" {} \;
 cd tuya-convert
 ./install_prereq.sh
+systemctl disable dnsmasq
 systemctl disable mosquitto
 echo "Setting $WLAN interface for tuya-convert ..."
 sed -i "s/^\(WLAN=\)\(.*\)/\1$WLAN/" config.txt
