@@ -13,7 +13,3 @@ if [ "${REF[0]}" != "${REF[1]}" ]; then
   read -n 1 -p "--Press any key to continue--"
 fi
 ./start_flash.sh
-echo "tuya-convert exited with code:$?"
-echo -e "\n\nWaiting for flash to complete.\nSleeping for 75 seconds...\n"
-SLEEP 75
-
