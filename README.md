@@ -1,6 +1,18 @@
 ## Proxmox Tuya-Convert Development/testing branch.
 
-CURRENT STATUS: Tested Working - Please advise if this script did not work for you. 
+CURRENT STATUS:   __Working__ (Dec 1, 2019)
+
+Please refer to Whiskerz007 repo as his script is up to date: 
+``` 
+https://github.com/whiskerz007/proxmox_tuya-convert_container
+```
+
+-- END -- STOP READING HERE --
+
+
+### DEVELOPMENT USE ONLY:
+
+Tested Working - Please advise if this script did not work for you. 
 
 Note: Some people report Vtrust-flash AP exists, but can not connect to it with Mobile phone, etc...
 
